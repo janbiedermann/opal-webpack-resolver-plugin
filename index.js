@@ -9,6 +9,7 @@ module.exports = class OpalWebpackResolverPlugin {
         const gemfile_lock_path = 'Gemfile.lock';
         const owl_cache_dir = '.owl_cache';
         const owl_cache_path = owl_cache_dir + '/load_paths.json';
+        const owl_compiler_cache_dir = owl_cache_dir + '/cc';
         var owl_cache_mtime = 0;
         var must_generate_cache = false;
 
