@@ -9,7 +9,6 @@ module.exports = class OpalWebpackResolverPlugin {
         const gemfile_lock_path = 'Gemfile.lock';
         const owl_cache_dir = '.owl_cache';
         const owl_cache_path = owl_cache_dir + '/load_paths.json';
-        const owl_compiler_cache_dir = owl_cache_dir + '/cc';
         var owl_cache_mtime = 0;
         var must_generate_cache = false;
 
@@ -22,7 +21,6 @@ module.exports = class OpalWebpackResolverPlugin {
             fs.accessSync(owl_cache_path, fs.constants.R_OK | fs.constants.W_OK);
         } catch (err) {
             if (!fs.existsSync(owl_cache_dir)) { fs.mkdirSync(owl_cache_dir); }
-            if (!fs.existsSync(owl_compiler_cache_dir)) { fs.mkdirSync(owl_compiler_cache_dir); }
             fs.writeFileSync(owl_cache_path, JSON.stringify({}));
             owl_cache_mtime = fs.statSync(owl_cache_path).mtimeMs;
             must_generate_cache = true;
