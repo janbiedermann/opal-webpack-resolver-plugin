@@ -65,11 +65,11 @@ module.exports = class OpalWebpackResolverPlugin {
                     resolver.doResolve(target, request, null, resolveContext, callback);
                 } else {
                     // continue pipeline
-                    callback();
+                    return callback();
                 }
             } else {
                 // continue pipeline
-                callback();
+                return callback();
             }
         });
     }

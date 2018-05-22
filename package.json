@@ -1,6 +1,6 @@
 {
   "name": "opal-webpack-resolver-plugin",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Plugin for webpack to help resolve opal ruby modules, intended to be used together with opal-webpack-loader",
   "main": "index.js",
   "scripts": {
