@@ -62,7 +62,7 @@ module.exports = class OpalWebpackResolverPlugin {
                 if (absolute_path) {
                     //console.log ("----> found here: ", absolute_path);
                     var result = Object.assign({}, request, {path: absolute_path});
-                    resolver.doResolve(target, request, null, resolveContext, callback);
+                    resolver.doResolve(target, result, null, resolveContext, callback);
                 } else {
                     // continue pipeline
                     return callback();
