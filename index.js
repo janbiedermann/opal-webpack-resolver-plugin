@@ -62,7 +62,7 @@ module.exports = class OpalWebpackResolverPlugin {
                 if (absolute_path) {
                     //console.log ("----> found here: ", absolute_path);
                     var result = Object.assign({}, request, {path: absolute_path});
-                    resolver.doResolve(target, result, null, resolveContext, callback);
+                    resolver.doResolve(target, result, "opal-webpack-resolver-plugin found: " + absolute_path, resolveContext, callback);
                 } else {
                     // continue pipeline
                     return callback();
@@ -110,6 +110,10 @@ module.exports = class OpalWebpackResolverPlugin {
         return directory_entries;
     }
 
+    is_file(path) {
+        return fs.statSync(path).isFile();
+    }
+
     get_absolute_path(path, request) {
         var logical_filename_rb;
         var logical_filename_js;
@@ -143,18 +147,18 @@ module.exports = class OpalWebpackResolverPlugin {
             absolute_filename = this.opal_load_paths[i] + logical_filename_rb;
             if (this.opal_load_path_entries.includes(absolute_filename)) {
                 // check if file exists?
-                // if (fs.existsSync(absolute_filename)) {
-                return absolute_filename;
-                // }
+                if (fs.existsSync(absolute_filename) && this.is_file(absolute_filename)) {
+                    return absolute_filename;
+                }
             }
             // try .js
             if (logical_filename_js) {
                 absolute_filename = this.opal_load_paths[i] + logical_filename_js;
                 if (this.opal_load_path_entries.includes(absolute_filename)) {
                     // check if file exists?
-                    // if (fs.existsSync(absolute_filename)) {
-                    return absolute_filename;
-                    // }
+                    if (fs.existsSync(absolute_filename) && this.is_file(absolute_filename)) {
+                        return absolute_filename;
+                    }
                 }
             }
         }
@@ -164,13 +168,13 @@ module.exports = class OpalWebpackResolverPlugin {
             if (this.opal_load_paths[i].startsWith(process.cwd())) {
                 // try .rb
                 absolute_filename = this.opal_load_paths[i] + logical_filename_rb;
-                if (fs.existsSync(absolute_filename)) {
+                if (fs.existsSync(absolute_filename) && this.is_file(absolute_filename)) {
                     return absolute_filename;
                 }
                 // try .js
                 if (logical_filename_js) {
                     absolute_filename = this.opal_load_paths[i] + logical_filename_js;
-                    if (fs.existsSync(absolute_filename)) {
+                    if (fs.existsSync(absolute_filename) && this.is_file(absolute_filename)) {
                         return absolute_filename;
                     }
                 }
@@ -180,11 +184,10 @@ module.exports = class OpalWebpackResolverPlugin {
         // check current path
         absolute_filename = path + logical_filename_rb;
         if (absolute_filename.startsWith(process.cwd())) {
-           if (fs.existsSync(absolute_filename)) {
+           if (fs.existsSync(absolute_filename) && this.is_file(absolute_filename)) {
                return absolute_filename;
            }
         }
-        // error('opal-webpack-loader: Unable to locate module "' + logical_path + '" included by ' + requester);
         return null;
     }
 
