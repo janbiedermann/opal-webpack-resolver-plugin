@@ -51,7 +51,6 @@ module.exports = class OpalWebpackResolverPlugin {
     }
 
     apply(resolver) {
-        // console.log("OWRP resolver: %O", resolver);
         const target = resolver.ensureHook(this.target);
         resolver.getHook(this.source).tapAsync("OpalWebpackResolverPlugin", (request, resolveContext, callback) => {
             // callback is only defined for tapAsync
@@ -63,7 +62,7 @@ module.exports = class OpalWebpackResolverPlugin {
                 if (absolute_path) {
                     //console.log ("----> found here: ", absolute_path);
                     var result = Object.assign({}, request, {path: absolute_path});
-                    resolver.doResolve(this.target, request, null, resolveContext, callback);
+                    resolver.doResolve(target, request, null, resolveContext, callback);
                 } else {
                     // continue pipeline
                     callback();
