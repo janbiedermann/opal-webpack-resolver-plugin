@@ -63,23 +63,15 @@ module.exports = class OpalWebpackResolverPlugin {
                 if (absolute_path) {
                     //console.log ("----> found here: ", absolute_path);
                     var result = Object.assign({}, request, {path: absolute_path});
-                    callback(null, result);
+                    resolver.doResolve(this.target, request, null, resolveContext, callback);
                 } else {
-                    //console.error("!! not found! !!");
+                    // continue pipeline
                     callback();
                 }
             } else {
-                // Any logic you need to create a new `request` can go here
-
-                // stops current pipeline and starts over again with modified request
-                // resolver.doResolve(this.target, request, null, callback);
-
-                // without args continues pipeline
+                // continue pipeline
                 callback();
             }
-            // with args:
-            // callback(error); // stops pipeline with error
-            // callback(null, result); // stops pipeline with success result
         });
     }
 
