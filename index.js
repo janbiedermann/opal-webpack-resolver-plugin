@@ -141,9 +141,12 @@ module.exports = class OpalWebpackResolverPlugin {
 
         var l = this.opal_load_paths.length;
 
+        // in general, to avoid conflicts, we need to lookup .rb first, once all .rb
+        // possibilities are checked, check .js
+        // try .rb
         // look up known entries
         for (var i = 0; i < l; i++) {
-            // try .rb
+
             absolute_filename = this.opal_load_paths[i] + logical_filename_rb;
             if (this.opal_load_path_entries.includes(absolute_filename)) {
                 // check if file exists?
@@ -151,32 +154,14 @@ module.exports = class OpalWebpackResolverPlugin {
                     return absolute_filename;
                 }
             }
-            // try .js
-            if (logical_filename_js) {
-                absolute_filename = this.opal_load_paths[i] + logical_filename_js;
-                if (this.opal_load_path_entries.includes(absolute_filename)) {
-                    // check if file exists?
-                    if (fs.existsSync(absolute_filename) && this.is_file(absolute_filename)) {
-                        return absolute_filename;
-                    }
-                }
-            }
         }
 
         // look up file system of app
         for (var i = 0; i < l; i++) {
             if (this.opal_load_paths[i].startsWith(process.cwd())) {
-                // try .rb
                 absolute_filename = this.opal_load_paths[i] + logical_filename_rb;
                 if (fs.existsSync(absolute_filename) && this.is_file(absolute_filename)) {
                     return absolute_filename;
-                }
-                // try .js
-                if (logical_filename_js) {
-                    absolute_filename = this.opal_load_paths[i] + logical_filename_js;
-                    if (fs.existsSync(absolute_filename) && this.is_file(absolute_filename)) {
-                        return absolute_filename;
-                    }
                 }
             }
         }
@@ -187,6 +172,28 @@ module.exports = class OpalWebpackResolverPlugin {
            if (fs.existsSync(absolute_filename) && this.is_file(absolute_filename)) {
                return absolute_filename;
            }
+        }
+
+        // try .js
+        // look up known entries
+        for (var i = 0; i < l; i++) {
+            absolute_filename = this.opal_load_paths[i] + logical_filename_js;
+            if (this.opal_load_path_entries.includes(absolute_filename)) {
+                // check if file exists?
+                if (fs.existsSync(absolute_filename) && this.is_file(absolute_filename)) {
+                    return absolute_filename;
+                }
+            }
+        }
+
+        // look up file system of app
+        for (var i = 0; i < l; i++) {
+            if (this.opal_load_paths[i].startsWith(process.cwd())) {
+                absolute_filename = this.opal_load_paths[i] + logical_filename_js;
+                if (fs.existsSync(absolute_filename) && this.is_file(absolute_filename)) {
+                    return absolute_filename;
+                }
+            }
         }
         return null;
     }
